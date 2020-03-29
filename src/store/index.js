@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import { Notification } from 'element-ui';
-import {getRequest} from "./utils/api.js";
+import {getRequest} from "../utils/api";
+// import '../utils/stomp'
+// import '../utils/sockjs'
 
 Vue.use(Vuex)
 
@@ -13,7 +14,7 @@ const store = new Vuex.Store({
         sessions: {},
         hrs: [],
         currentSession: null,
-         currentHr: JSON.parse(window.sessionStorage.getItem("user")),
+        currentHr: JSON.parse(window.sessionStorage.getItem("user")),
         filterKey: '',
         stomp: null,
         isDot: {}
@@ -52,7 +53,7 @@ const store = new Vuex.Store({
             state.hrs = data;
         }
     },
-   actions: {
+  /*  actions: {
         connect(context) {
             context.state.stomp = Stomp.over(new SockJS('/ws/ep'));
             context.state.stomp.connect({}, success => {
@@ -73,16 +74,16 @@ const store = new Vuex.Store({
             }, error => {
 
             })
-        }/* ,  
-         initData(context) {
+        }, */
+        /* initData(context) {
             context.commit('INIT_DATA')
             getRequest("/chat/hrs").then(resp => {
                 if (resp) {
                     context.commit('INIT_HR', resp);
                 }
-            }) 
+            })
         } */
-    } 
+    }
 })
 
 store.watch(function (state) {
