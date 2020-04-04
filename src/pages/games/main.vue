@@ -33,39 +33,35 @@
 		<div id="body">
 			<v-row>
 				<v-col cols="1">
-					<v-card color="#98FB98" class="friend">好友</v-card>
+					<!-- 好友 -->
+					<friend ref="friend"></friend>
 				</v-col>
 
 				<v-col cols="10">
 					<router-view/>
 				</v-col>
+				
 				<v-col cols="1">
-					<v-card color="#4682B4" class="active">签到</v-card>
+					<!-- 暂时只有签到 -->
+					<singin ref="singin"></singin>
 				</v-col>
 			</v-row>
 		</div>
 		<div id="bottom" cols="12">
 			<v-bottom-navigation v-model="bottomNav" dark shift>
-				<v-btn disabled>
-				</v-btn>
 				<v-btn>
-					<span>设置</span>
+					<span>游戏</span>
 					<v-icon>mdi-television-play</v-icon>
 				</v-btn>
-
-				<v-btn>
-					<span>商城</span>
-					<v-icon>mdi-book</v-icon>
-				</v-btn>
-				<v-btn>
-					<span>背包</span>
-					<v-icon>mdi-book</v-icon>
-				</v-btn>
-
-				<v-btn>
-					<span>战绩</span>
-					<v-icon>mdi-image</v-icon>
-				</v-btn>
+				<!-- 设置 -->
+				<setting ref="setting" @updateBottomNav="updateBottomNav"></setting>
+				<!-- 商城 -->
+				<shop ref="shop" @updateBottomNav="updateBottomNav"></shop>
+				<!-- 背包 -->
+				<backpacker ref="backpacker" @updateBottomNav="updateBottomNav"></backpacker>
+				<!-- 历史战绩 -->
+				<historicalRecord ref="historicalRecord" @updateBottomNav="updateBottomNav"></historicalRecord>
+				
 			</v-bottom-navigation>
 			<div cols="12" class="black"><span class="foot">版权所有</span></div>
 		</div>
@@ -73,7 +69,21 @@
 </template>
 
 <script>
+	import singin from '../../components/games/SingIn.vue';
+	import friend from '../../components/games/Friend.vue';
+	import setting from '../../components/hurdle/Setting.vue';
+	import backpacker from '../../components/hurdle/Backpacker.vue';
+	import historicalRecord from '../../components/hurdle/HistoricalRecord.vue';
+	import shop from '../../components/hurdle/Shop.vue';
 	export default {
+		components: {
+			singin,
+			friend,
+			setting,
+			backpacker,
+			historicalRecord,
+			shop, 
+		},
 		data() {
 			return {
 				alignmentsAvailable: [
@@ -94,6 +104,13 @@
 				],
 				justify: 'center',
 				bottomNav: 0,
+				
+			}
+		},
+		methods:{
+			updateBottomNav(){
+				this.bottomNav = 0;
+				// alert(1);
 			}
 		},
 		computed: {
@@ -117,11 +134,12 @@
 	#main {
 		width: 100%;
 		height: 100%;
+		background-image: url(../../assets/background.jpg);
 	}
 
 	#head {
 		float: left;
-		background-color: #ACE0F9;
+		/* background-color: #ACE0F9; */
 		width: 100%;
 		height: 75px;
 	}
@@ -129,7 +147,9 @@
 	#body {
 		width: 100%;
 		height: 100%;
-		background-color: 	#B0C4DE;
+		/* background-color: 	#B0C4DE; */
+		
+		background-image: url(../../assets/background.jpg);
 	}
 
 	#bottom {
@@ -137,7 +157,7 @@
 		margin-bottom: 0;
 		bottom: 0;
 		position: absolute;
-		background-color: chartreuse;
+		/* background-color: chartreuse; */
 		width: 100%;
 		height: 80px;
 	}
@@ -157,21 +177,28 @@
 		text-align: center;
 		font-size:20px;
 	}
-	.friend{
+/* 	.friend{
 		height: 450px;
 		margin-left: 10px;
 		text-align: center;
-	}
-	.active{
-		margin-right: 20px;
-		height: 450px;
-		text-align: center;
-	}
+	} */
+	
 	.foot{
 		width: 100%;  
 		background-color: #322222; 
 		float: right;
 		color: white;
+	}
+	.friend{
+		padding: 10px;
+		font-size: 25px;
+		text-shadow: 5px 5px 5px black, 0px 0px 2px black; 
+		color: white;	
+	}
+	.signIn{
+		font-size: 25px;
+        text-shadow: 5px 5px 5px black, 0px 0px 2px black; 
+        color: #8A2BE2;		
 	}
 /* 	img {
 		height: 100%;

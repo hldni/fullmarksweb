@@ -8,7 +8,7 @@
 	
 			<v-progress-linear ref="schedu" indeterminate color="cyan" :active="loading"></v-progress-linear>
 			<br>
-			<span>系统登录</span>
+			<span>百分纸牌登录</span>
 			<!--定义一个路由锚点，Layout的子组件内容将在这里展示-->
 			<router-view/>
 			<v-alert v-model="alert" type="error" style="float: left;">

@@ -6,6 +6,7 @@ import Password from './pages/passwordLogin.vue'
 import CodeLogin from './pages/codeLogin.vue'
 import Main from './pages/games/main.vue'
 import Game from './pages/games/Game.vue'
+import BeginGame from './pages/games/BeginGame.vue'
 import Level from './components/games/Level.vue'
 import ChoseRoom from './components/games/ChoseRoom.vue'
 
@@ -57,25 +58,18 @@ export default new Router({
 					component: ChoseRoom,
 				}, 
 			]
-		},,
+		},
 		{
 			path: '/Game',
 			name: 'Game',
 			component: Game,
 			hidden:true,
-			// children:[
-			// 	{
-			// 		path: '/',
-			// 		name: 'Level',
-			// 		component: Level,
-			// 		hidden:true
-			// 	},
-			// 	{
-			// 		path: '/choseRoom',
-			// 		name: 'ChoseRoom',
-			// 		component: ChoseRoom,
-			// 	}, 
-			// ]
+		},
+		{
+			path: '/beginGame',
+			name: 'BeginGame',
+			component: BeginGame,
+			hidden:true,
 		},
 		
 		/* {
