@@ -65,68 +65,59 @@
 		</v-row>
 		<v-row>
 			<v-col cols="4" v-for="(room, i) in rooms">
-				<v-card :color="roomColor" class="room">
-					{{room.houseName}}
-					<v-icon v-show="room.houseWay">lock</v-icon>
-					<v-row>
-						<v-col :offset="index%2 == 0 ? 1:0" cols=5 v-for="(user, index) in room.users">
-							<v-card v-if="user.uname != ''">
-								<img :src="user.uface" class="head" />
-								<span style="size: 8px;">{{user.uname}}</span>
-							</v-card>
-							<!-- 		<v-card v-if="user.uname == ''"  @click="perpare">
-								<img :src="user.uface" class="headNull"/>
-							</v-card>
-							 -->
-							<v-card v-if="user.uname == ''" v-on="on">
-								<img :src="user.uface" class="headNull" @click="toRoom" />
-							</v-card>
-							<!-- 	
-							<v-tooltip bottom color="success">
-								<template v-slot:activator="{ on }">
-									<v-card v-if="user.uname == '' && !room.houseWay"  v-on="on">
-										<img :src="user.uface" class="headNull"  @click="toRoom"/>
-									</v-card>
-								</template>
-								<span>点击加入房间:{{room.houseName}}</span>
-							</v-tooltip>
-						 -->
-
-
-							<!-- 
-							<v-dialog v-model="rooms[i].joinRoom"  max-width="290">
-								<template v-slot:activator="{ on }">
-									<v-card v-if="user.uname == '' && room.houseWay" v-on="on">
-										<img :src="user.uface" class="headNull"/>
-									</v-card>
-								</template>
-								<v-card>
-									<v-card-title class="headline">请输入密码</v-card-title>
-									<v-text-field v-model="toRoomPassword"  label="请输入房间密码"></v-text-field>
-									<v-card-actions>
-										<v-btn color="green darken-1" text @click="toRoom(i)">加入</v-btn>
-									</v-card-actions>
-								</v-card>
-							</v-dialog> -->
-						</v-col>
-					</v-row>
-				</v-card>
+	
 				
-			<!-- 	
+				
 				<v-hover>
 					<template v-slot:default="{ hover }">
-						<v-card class="mx-auto">
+						<v-card class="room">
 							
-								<span class="primary--text subtitle-2">64 Reviews</span>
+							<v-card :color="roomColor" >
+								{{room.houseName}}
+								<v-icon v-show="room.houseWay">lock</v-icon>
+								<v-row>
+									<v-col :offset="index%2 == 0 ? 1:0" cols=5 v-for="(user, index) in room.users">
+										<v-card v-if="user.uname != ''">
+											<img :src="user.uface" class="head" />
+											<span style="size: 8px;">{{user.uname}}</span>
+										</v-card>
+										<v-card v-if="user.uname == ''" v-on="on">
+											<img :src="user.uface" class="headNull" @click="toRoom" />
+										</v-card>
+									</v-col>
+								</v-row>
+							</v-card>
 				
-							<v-fade-transition>
+							<v-fade-transition  v-if="!room.houseWay">
 								<v-overlay v-if="hover" absolute color="#036358">
-									<v-btn>点击加入房间</v-btn>
-								</v-overlay>
-							</v-fade-transition>
+									
+									<v-btn :disabled = "room.isFull" @click="toRoom">点击加入房间</v-btn>
+									
+									
+										</v-overlay>
+									</v-fade-transition>
+									
+									<v-dialog v-model="rooms[i].joinRoom" persistent  max-width="290">
+											<template v-slot:activator="{ on }">
+												<v-fade-transition  v-if="room.houseWay">
+												<v-overlay v-if="hover" absolute color="#036358">
+													<v-btn :disabled = "room.isFull" v-on="on">点击加入房间</v-btn>
+												</v-overlay>
+											</v-fade-transition>
+										</template>
+										<v-card>
+											<v-card-title class="headline">请输入密码</v-card-title>
+											<v-text-field v-model="toRoomPassword"  label="请输入房间密码"></v-text-field>
+											<v-card-actions>
+												<v-btn color="green darken-1" text @click="toRoom(i)">加入</v-btn>
+											</v-card-actions>
+										</v-card>
+									</v-dialog>
+									
+									
 						</v-card>
 					</template>
-				</v-hover> -->
+				</v-hover>
 				
 				
 			</v-col>
@@ -158,6 +149,7 @@
 						hoseId: '232323',
 						houseWay: false,
 						joinRoom: false,
+						isFull:false,
 						users: [{
 								user_houseId: '',
 								uname: '张三',
@@ -185,6 +177,7 @@
 						hoseId: '232324',
 						houseWay: true,
 						joinRoom: false,
+						isFull:true,
 						users: [{
 								user_houseId: '',
 								uname: '张三',
@@ -212,6 +205,7 @@
 						hoseId: '232325',
 						houseWay: true,
 						joinRoom: false,
+						isFull:true,
 						users: [{
 								user_houseId: '',
 								uname: '张三',
@@ -239,6 +233,7 @@
 						hoseId: '232325',
 						houseWay: true,
 						joinRoom: false,
+						isFull:false,
 						users: [{
 								user_houseId: '',
 								uname: '张三',
@@ -272,9 +267,9 @@
 				this.$router.push("/game");
 			},
 			toRoom(index) {
-				alert("加入成功");
+				// alert("加入成功");
 				this.rooms[index].joinRoom = false;
-				// this.$router.push("/game");
+				this.$router.push("/game");
 			},
 			addRoom() {
 				this.creatRoom = false;
@@ -288,6 +283,8 @@
 					houseName: this.roomName,
 					hoseId: '232326',
 					houseWay: isPassword,
+					joinRoom: false,
+					isFull:false,
 					users: [{
 							user_houseId: '',
 							uname: '张三',
