@@ -56,6 +56,14 @@ router.beforeEach((to, from, next) => {
 	} else {
 		if (window.sessionStorage.getItem("user")) {
 			// initMenu(router, store);
+			// alert("准备执行test"); 
+			// Message.success("准备执行test.....");
+			if(window.sessionStorage.getItem("globalConnect")){
+				store.dispatch('connect');
+			}
+			// store.dispatch('increment');
+			// alert("已经执行test");
+			// Message.success("已经执行test");
 			next();
 		} else {
 			next('/?redirect=' + to.path);

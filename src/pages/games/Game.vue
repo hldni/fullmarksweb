@@ -131,7 +131,7 @@
 												<div class="my-3">{{ friend.name }}</div>
 											</v-col>
 											<v-col cols="3">
-												<v-btn color="warning" fab small>
+												<v-btn color="warning" fab small @click="sendToFriend()">
 													<v-icon>mdi-message-text</v-icon>
 												</v-btn>
 											</v-col>
@@ -153,9 +153,73 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default {
 		data() {
 			return {
+				user : JSON.parse(window.sessionStorage.getItem("user")),//当前用户
+				players:[
+					{
+						isMaster:false,//房主
+						username:'zhang',//用户名
+						uname:'张三',//昵称
+						uface:'../../assets/logo.png',//头像
+						friendId:1,//朋家下标
+						friends:[
+							{
+								isConnect:'no',//在线状态  no不在线 yes在线 not勿扰
+								username:'li',//用户名
+								uname:'李四',//
+							}
+						],//好友
+						status:'未准备',
+					},
+					{
+						isMaster:true,//房主
+						username:'dddddddd',//用户名
+						uname:'张三',//昵称
+						uface:'../../assets/logo.png',//头像
+						friendId:0,//朋家下标
+						friends:[
+							{
+								isConnect:'no',//在线状态  no不在线 yes在线 not勿扰
+								username:'li',//用户名
+								uname:'李四',//
+							}
+						],//好友
+						status:'未准备',
+					},
+					{
+						isMaster:true,//房主
+						username:'fdfds',//用户名
+						uname:'王麻子',//昵称
+						uface:'../../assets/logo.png',//头像
+						friendId:4,//朋家下标
+						friends:[
+							{
+								isConnect:'no',//在线状态  no不在线 yes在线 not勿扰
+								username:'li',//用户名
+								uname:'李四',//
+							}
+						],//好友
+						status:'未准备',
+					},
+					{
+						isMaster:true,//房主
+						username:'dsfdsf',//用户名
+						uname:'校长',//昵称
+						uface:'../../assets/logo.png',//头像
+						friendId:3,//朋家下标
+						friends:[
+							{
+								isConnect:'no',//在线状态  no不在线 yes在线 not勿扰
+								username:'li',//用户名
+								uname:'李四',//
+							}
+						],//好友
+						status:'未准备',
+					}
+				],
 				inviteFriends: false,
 				chatFriends:false,
 				friends: [{
@@ -173,16 +237,35 @@
 				],
 			}
 		},
+        computed: mapState([
+            'stomp_room',
+			'roomId',
+			'count',
+        ]),
 		methods: {
 			back() {
+				//关闭房间socket连接
+				this.$store.dispatch('close_connect_room');
 				this.$router.push("/choseRoom");
 			},
 			begin() {
 				this.$router.push("/beginGame")
+			},
+			sendToFriend(){
+				alert(this.count);
+			},
+			sendMessage(){
+				let msgObj = new Object();
+				msgObj.message = this.content;
+				msgObj.from = this.user.username;
+				this.stomp_room.send('/ws/sendAllUser/'+this.roomId, {}, JSON.stringify(msgObj));
 			}
 			// perpare(){
 			// 	this.$router.push("/game");
 			// }
+		},
+		created() {
+			this.sendMessage();
 		}
 	}
 </script>

@@ -12,7 +12,7 @@
 						</v-col>
 						<v-col cols="8">
 							<div >
-								adsadssasddddddd
+								{{user.username}}
 							</div>
 							<div>
 								等级
@@ -104,6 +104,7 @@
 				],
 				justify: 'center',
 				bottomNav: 0,
+				user : JSON.parse(window.sessionStorage.getItem("user"))
 				
 			}
 		},

@@ -8,6 +8,11 @@ import Message from '../components/Message/index.js'
 
 // Vue.prototype.$message = Message
 
+export const initMenu = (router, store) => {
+    //执行
+    store.dispatch('connect');
+}
+
 axios.interceptors.response.use(success => {
     if (success.status && success.status == 200 && success.data.status == 500) {
         // return;
@@ -25,6 +30,7 @@ axios.interceptors.response.use(success => {
     } else if (error.response.status == 403) {
 		Message.error("权限不足，请联系管理员");
     } else if (error.response.status == 401) {
+		window.sessionStorage.removeItem("user");
 		Message.error("尚未登录，请登录");
         router.replace('/');
     } else {

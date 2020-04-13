@@ -44,7 +44,7 @@
 				message: '',
 				nameRules: [
 					v => !!v || 'Name is required',
-					v => v.length >= 6 || '用户名长度不能小于6',
+					// v => v.length >= 6 || '用户名长度不能小于6',
 					v => v.length <= 11 || '用户名长度不能超过11',
 					v => /^[a-zA-z0-9]*$/.test(v) || '请输入合法用户名',
 				],
