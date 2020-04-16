@@ -92,7 +92,7 @@
 											<template v-slot:activator="{ on }">
 												<v-fade-transition  v-if="room.roomWay">
 												<v-overlay v-if="hover" absolute color="#036358">
-													<v-btn :disabled = "room.roomState" v-on="on"">点击加入房间</v-btn>
+													<v-btn :disabled = "room.roomState" v-on="on">点击加入房间</v-btn>
 												</v-overlay>
 											</v-fade-transition>
 										</template>

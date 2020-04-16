@@ -24,7 +24,9 @@ const store = new Vuex.Store({
         isDot: {},
 		count:0,
 		roomId:'',
-		subscript:null
+		subscript:null,
+		players:null,//房间中的玩家
+		roomNum:0,//房间人数
     },
 	//这里是set方法
     mutations: {
@@ -109,12 +111,67 @@ const store = new Vuex.Store({
 			context.state.stomp_room = Stomp.over(new SockJS("/ws/ep"));
 			context.state.stomp_room.connect({}, frame=> {
 			context.state.roomId = roomId;//设置房间号为当前房间号
+			++context.state.roomNum;
 			router.push("/game");//连接成功，成功进入
 			context.state.subscript = context.state.stomp_room.subscribe("/topic/sendTopic/"+roomId, message=> {
 				// this.$router.push("/game");
 				var msg = JSON.parse(message.body);
-				Message.success(msg.from+"加入房间:"+roomId+"成功");
-				this.test = msg;
+				/**
+				 * 新玩家加入：
+				 * 	1、更新房间内的人
+				 * 	2、更新自己的好友
+				 *  3、房间内人数补充至4人
+				 */
+				if(msg.status == 0){//新玩家加入
+					alert("房间人数"+msg.players.length);
+					context.state.players = msg.players;
+					if(msg.from.uid ==  JSON.parse(window.sessionStorage.getItem("user")).uid){
+						context.state.friends = msg.friends;
+					}
+					//将房间内人数补充至4人
+					let player = new Object();
+					player.username = '';
+					player.uface = 'img/waitplay.5e1581e1.png';
+					player.status = 4;
+					for (var i = msg.players.length -1; i < 4; i++) {
+						context.state.players .push(player);
+					}
+				}
+				if(msg.status == 1){//有玩家退出  更新房间内玩家
+					var msg = JSON.parse(message.body);
+					context.state.players = msg.players;
+					//将房间内人数补充至4人
+					let player = new Object();
+					player.username = '';
+					player.uface = 'img/waitplay.5e1581e1.png';
+					player.status = 4;
+					for (var i = msg.players.length -1; i < 4; i++) {
+						context.state.players .push(player);
+					}
+					if(msg.from.uid ==  JSON.parse(window.sessionStorage.getItem("user")).uid){
+						alert("退出成功");
+						//关闭连接
+						if(context.state.stomp_room != null){
+							// context.state.subscript.unsubscribe();
+							context.state.stomp_room.disconnect();
+							context.state.stomp_room = null;
+						}
+					}
+				}
+				if(msg.status == 2){
+					alert("切换成功"+msg.index)
+					context.state.players[msg.index].status = 1;
+				}else if(msg.status == 3){
+					alert("切换成功2")
+					context.state.players[msg.index].status = 0;
+				}
+				// 	let player = new Object();
+				// 	// player.isMaster = player.
+				// }else if(true){
+					
+					
+				// }
+				
 			});
 			}, failedMsg=> {
 				Message.error("加入失败，请稍后重新尝试!");
