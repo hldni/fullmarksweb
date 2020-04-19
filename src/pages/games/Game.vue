@@ -284,7 +284,7 @@
 					username:'dsfdfsfsddsf',//用户名
 					uname:'揉揉右',//昵称
 					uface:'img/waitplay.5e1581e1.png',//头像
-					status:2,//准备状态 0 未准备 1 已准备 2开始游戏 3等待房主开始游戏
+					status:0,//准备状态 0 未准备 1 已准备 2开始游戏 3等待房主开始游戏
 				},
 				inviteFriends: false,
 				chatFriends:false,
@@ -324,6 +324,10 @@
 				this.$router.push("/choseRoom");
 			},
 			begin() {
+				//开始游戏之前判断所有玩家是否已准备
+				
+				
+				
 				this.$router.push("/beginGame")
 			},
 			sendToFriend(){
@@ -337,6 +341,8 @@
 					msgObj.username = this.user.username;
 					this.stomp_room.send('/ws/sendAllUser/'+this.roomId, {}, JSON.stringify(msgObj));
 					this.isInit = false;
+				}else{
+					alert(22323);
 				}
 			},
 			changeStatus(type){

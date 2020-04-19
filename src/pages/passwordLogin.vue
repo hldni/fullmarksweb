@@ -5,7 +5,7 @@
 			<v-form ref="form" v-model="valid" lazy-validation>
 				<v-text-field v-model="user.username" :counter="11" :rules="nameRules" label="用户名" required></v-text-field>
 
-				<v-text-field v-model="user.password" :rules="passwordRules" label="密码" required></v-text-field>
+				<v-text-field v-model="user.upassword" :rules="upasswordRules" label="密码" required></v-text-field>
 				<v-row justify="space-between">
 					<v-col cols="12" md="4">
 						<v-text-field v-model="user.code" :counter="4" :rules="codeRules" label="验证码" required></v-text-field>
@@ -25,6 +25,10 @@
 				<v-btn color="warning" @click="resetValidation">
 					去注册
 				</v-btn>
+				
+		<!-- 		<v-btn color="warning" @click="resetValidation">
+					不是我本人，注销此账号
+				</v-btn> -->
 			</v-form>
 		</v-col>
 		<v-col cols="12" md="1"></v-col>
@@ -38,7 +42,7 @@
 				valid: false,
 				user: {
 					username: 'dddddddd',
-					password: 'ssdsddss',
+					upassword: 'ssdsddss',
 					code: 'dddd',
 				},
 				message: '',

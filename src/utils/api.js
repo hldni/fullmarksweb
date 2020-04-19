@@ -23,8 +23,6 @@ axios.interceptors.response.use(success => {
        // Message.succ({message: success.data.msg})
     return success.data;
 }, error => {
-	
-		Message.error("zheshi 错误");
     if (error.response.status == 504 || error.response.status == 404) {
 		Message.error("服务器被吃了( ╯□╰ )");
     } else if (error.response.status == 403) {
@@ -32,8 +30,12 @@ axios.interceptors.response.use(success => {
     } else if (error.response.status == 401) {
 		window.sessionStorage.removeItem("user");
 		Message.error("尚未登录，请登录");
-        router.replace('/');
-    } else {
+		router.replace('/');
+    } else if (error.response.status == 505) {
+		window.sessionStorage.removeItem("user");
+		Message.error(error.response.data.msg);
+		router.replace('/');
+	}else {
 		Message.error("未知错误aa!");
         if (error.response.data.msg) {
             Message.error({message: error.response.data.msg})

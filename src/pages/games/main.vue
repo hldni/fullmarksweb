@@ -14,7 +14,7 @@
 							<div >
 								{{user.username}}
 							</div>
-							<div>
+							<div @click="test">
 								等级
 							</div>
 						</v-col>
@@ -26,7 +26,9 @@
 				<v-col cols="1">
 					<div style="background-color: #FFF1EB;">钻石</div>
 				</v-col>
-				<v-col cols="1"></v-col>
+				<v-col cols="1">
+					<v-btn @click="quit">退出</v-btn>
+				</v-col>
 				<!-- </v-container> -->
 			</v-row>
 		</div>
@@ -112,7 +114,26 @@
 			updateBottomNav(){
 				this.bottomNav = 0;
 				// alert(1);
-			}
+			},
+			quit(){
+				alert("调用quit");
+				this.getRequest("/user/logout").then(s => {
+					alert("返回成功" + s.status);
+					if(s.status == 200 && s.msg == 'session清除成功!'){
+						this.getRequest("/quit").then(s => {
+							alert(s.msg);
+							// window.sessionStorage.removeItem("user");
+							// this.$router.push("/");
+						})
+					}
+					// window.sessionStorage.removeItem("user");
+					// this.$router.push("/");
+				});
+			},
+			test(){
+				
+				this.getRequest("/quifdsft", this.user).then(s => {});
+			},
 		},
 		computed: {
 			color() {

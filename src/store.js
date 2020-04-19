@@ -165,12 +165,6 @@ const store = new Vuex.Store({
 					alert("切换成功2")
 					context.state.players[msg.index].status = 0;
 				}
-				// 	let player = new Object();
-				// 	// player.isMaster = player.
-				// }else if(true){
-					
-					
-				// }
 				
 			});
 			}, failedMsg=> {

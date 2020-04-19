@@ -50,12 +50,9 @@
 				this.$router.push("/choseRoom");
 			},
 			primary1(){
-				//let msgObj = new Object();
-				// alert(this.$store.state.roomId);
-				//msgObj.message = this.content;
-				// alert("this");
-				//this.stomp_room.send('/ws/sendAllUser/123', {}, JSON.stringify(msgObj));
-				// alert(this.content);
+				
+				alert(1);
+				this.getRequest("/user/logout", this.user).then(s => {});
 			}
 		}
 	}
