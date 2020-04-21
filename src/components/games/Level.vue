@@ -50,9 +50,11 @@
 				this.$router.push("/choseRoom");
 			},
 			primary1(){
+				// alert("不要瞎搞！！！");
 				
-				alert(1);
-				this.getRequest("/user/logout", this.user).then(s => {});
+				this.$router.push('/test')
+				// alert(1);
+				// this.getRequest("/user/logout", this.user).then(s => {});
 			}
 		}
 	}

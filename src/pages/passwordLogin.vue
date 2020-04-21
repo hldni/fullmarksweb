@@ -100,10 +100,11 @@
 				this.$parent.alert = false;
 			},
 			resetValidation(){
-				this.$message.success("yes");
+				// this.$message.success("yes");
 				// this.$router.push("/home");
-				this.$router.push('/codeLogin')
-				this.$message.success("no");
+				// this.$router.push('/codeLogin')
+				// this.$router.push('/test')
+				// this.$message.success("no");
 			}
 		},
 		watch:{

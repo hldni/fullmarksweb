@@ -9,6 +9,8 @@ import Game from './pages/games/Game.vue'
 import BeginGame from './pages/games/BeginGame.vue'
 import Level from './components/games/Level.vue'
 import ChoseRoom from './components/games/ChoseRoom.vue'
+import MessageTest from './pages/test/MessageTest.vue'
+import UpdateData from './pages/user/updata.vue'
 
 Vue.use(Router)
 
@@ -69,6 +71,18 @@ export default new Router({
 			path: '/beginGame',
 			name: 'BeginGame',
 			component: BeginGame,
+			hidden:true,
+		},
+		{
+			path: '/test',
+			name: 'messagetest',
+			component: MessageTest,
+			hidden:true,
+		},
+		{
+			path: '/updateData',
+			name: 'UpdateData',
+			component: UpdateData,
 			hidden:true,
 		},
 		

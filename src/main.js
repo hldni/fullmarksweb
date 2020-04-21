@@ -37,13 +37,16 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
  
 router.beforeEach((to, from, next) => {
+	if(from.path == '/' &&  to.path != '/' ){//需要首次或者重新建立全局webSocket连接，浏览器刷新会导致websocket连接丢失
+			store.dispatch('connect');
+	}
 	if (to.path == '/' || to.path == '/codeLogin' || to.path == '/register') {
 		if (window.sessionStorage.getItem("user")) {
 			this.$router.go(-1)
 			next(false);
 		}
 		next();
-		let allowBack = true    //    给个默认值true
+		let allowBack = true    //    给个默认值true 禁止后退
 		if (to.meta.allowBack !== undefined) {
 		    allowBack = to.meta.allowBack
 		}
@@ -54,16 +57,8 @@ router.beforeEach((to, from, next) => {
 		    allowBack: allowBack
 		})
 	} else {
-		if (window.sessionStorage.getItem("user")) {
+		if (window.sessionStorage.getItem("user")) {//已登陆用户
 			// initMenu(router, store);
-			// alert("准备执行test"); 
-			// Message.success("准备执行test.....");
-			if(window.sessionStorage.getItem("globalConnect")){
-				store.dispatch('connect');
-			}
-			// store.dispatch('increment');
-			// alert("已经执行test");
-			// Message.success("已经执行test");
 			next();
 		} else {
 			next('/?redirect=' + to.path);

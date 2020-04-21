@@ -17,6 +17,9 @@
 							<div @click="test">
 								等级
 							</div>
+							<div @click="updataFace">
+								修改头像
+							</div>
 						</v-col>
 					</v-row>
 				</v-col>
@@ -116,14 +119,12 @@
 				// alert(1);
 			},
 			quit(){
-				alert("调用quit");
 				this.getRequest("/user/logout").then(s => {
-					alert("返回成功" + s.status);
 					if(s.status == 200 && s.msg == 'session清除成功!'){
 						this.getRequest("/quit").then(s => {
-							alert(s.msg);
-							// window.sessionStorage.removeItem("user");
-							// this.$router.push("/");
+							this.$message.success(s.msg);
+							window.sessionStorage.removeItem("user");
+							this.$router.push("/");
 						})
 					}
 					// window.sessionStorage.removeItem("user");
@@ -132,8 +133,11 @@
 			},
 			test(){
 				
-				this.getRequest("/quifdsft", this.user).then(s => {});
+				// this.getRequest("/quifdsft", this.user).then(s => {});
 			},
+			updataFace(){
+				this.$router.push("/updateData");
+			}
 		},
 		computed: {
 			color() {
