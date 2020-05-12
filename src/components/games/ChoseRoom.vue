@@ -56,9 +56,6 @@
 		</v-row>
 		<v-row>
 			<v-col cols="4" v-for="(room, i) in rooms">
-	
-				
-				
 				<v-hover>
 					<template v-slot:default="{ hover }">
 						<v-card class="room">
@@ -81,32 +78,26 @@
 				
 							<v-fade-transition  v-if="!room.roomWay">
 								<v-overlay v-if="hover" absolute color="#036358">
-									
 									<v-btn :disabled = "room.roomState" @click="toRoom(i)">点击加入房间</v-btn>
-									
-									
+								</v-overlay>
+							</v-fade-transition>
+							<v-dialog v-model="rooms[i].joinRoom" persistent  max-width="290">
+									<template v-slot:activator="{ on }">
+										<v-fade-transition  v-if="room.roomWay">
+										<v-overlay v-if="hover" absolute color="#036358">
+											<v-btn :disabled = "room.roomState" v-on="on">点击加入房间</v-btn>
 										</v-overlay>
 									</v-fade-transition>
-									
-									<v-dialog v-model="rooms[i].joinRoom" persistent  max-width="290">
-											<template v-slot:activator="{ on }">
-												<v-fade-transition  v-if="room.roomWay">
-												<v-overlay v-if="hover" absolute color="#036358">
-													<v-btn :disabled = "room.roomState" v-on="on">点击加入房间</v-btn>
-												</v-overlay>
-											</v-fade-transition>
-										</template>
-										<v-card>
-											<v-card-title class="headline">请输入密码</v-card-title>
-											<v-text-field v-model="toRoomPassword"  :error-messages="errorMessage" label="请输入房间密码"></v-text-field>
-											<v-card-actions>
-												<v-btn color="green darken-1" text @click="rooms[i].joinRoom = false">取消</v-btn>
-												<v-btn color="green darken-1" text @click="toRoom(i)">加入</v-btn>
-											</v-card-actions>
-										</v-card>
-									</v-dialog>
-									
-									
+								</template>
+								<v-card>
+									<v-card-title class="headline">请输入密码</v-card-title>
+									<v-text-field v-model="toRoomPassword"  :error-messages="errorMessage" label="请输入房间密码"></v-text-field>
+									<v-card-actions>
+										<v-btn color="green darken-1" text @click="rooms[i].joinRoom = false">取消</v-btn>
+										<v-btn color="green darken-1" text @click="toRoom(i)">加入</v-btn>
+									</v-card-actions>
+								</v-card>
+							</v-dialog>
 						</v-card>
 					</template>
 				</v-hover>
@@ -154,34 +145,36 @@
 			perpare() {
 				this.$router.push("/game");
 			},
-			createConnect(index){
+			createConnect(roomId){
 				//let msgObj = new Object();
 				//msgObj.from = this.user.username;
 				//this.rooms[index].joinRoom = false;
 				//this.stomp_room.send('/ws/sendAllUser/'+this.rooms[index].roomId, {}, JSON.stringify(msgObj));
-				this.$store.dispatch('connect_room',this.rooms[index].roomId);
+				this.$store.dispatch('connect_room',roomId);
 			},
 			toRoom(index) {//加入房间
 				if(!this.rooms[index].roomWay){//没有枷锁
-					this.createConnect(index);
+					this.createConnect(this.rooms[index].roomId);
 					return;
 				}
 				if(this.rooms[index].roomWay && this.toRoomPassword != this.rooms[index].roomPassword){
 					this.errorMessage = '请输入正确的密码(四位数字)';
 					this.toRoomPassword = '';
 				}else{
-					this.createConnect(index);
+					this.createConnect(this.rooms[index].roomId);
 					this.rooms[index].joinRoom = false;
 				}
 					
 			},
 			addRoom() {//添加/创建房间
 				this.postRequest("/room/create",this.room).then(s => {
-					
+					alert("创建成功,房间号:"+s.msg);
+					this.$store.commit('SET_INFO_ROOM', s.msg);
+					this.createConnect(s.msg);
+					this.creatRoom = false;
+					this.isPassword = 'false';
 				});
-				this.creatRoom = false;
-				this.isPassword = 'false';
-				this.getRooms(0);
+				// this.getRooms(0);
 				// this.$router.push("/game")
 			},
 			getRooms(level){
@@ -211,7 +204,7 @@
 						for(let j = s.data[i].users.length; j < 4; j++){
 							let user =  new Object();
 							user.uname = '';
-							user.uface = 'img/waitplay.5e1581e1.png';
+							user.uface = 'http://47.93.26.159:8421/img/show?path=cb6304e4-ef1d-425e-920f-26b3080ee6cd.png';
 							room.users.push(user);
 						}
 						rooms.push(room);

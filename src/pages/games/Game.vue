@@ -190,7 +190,8 @@
 						</span>
 					</v-card-text>
 				</v-card>
-				<v-card class="mySelfState" v-if="mySelfPlayer.status == 1" color="#556B2F" width="220" height="50" outlined  @click="changeStatus(1)">
+				<!-- <v-card class="mySelfState" v-if="mySelfPlayer.status == 1" color="#556B2F" width="220" height="50" outlined  @click="changeStatus(1)"> -->
+				<v-card class="mySelfState" v-if="mySelfPlayer.status == 1" color="#556B2F" width="220" height="50" outlined  @click="begin">
 					<v-card-text>
 						<span style="font-size: 18px;color: white;">
 							已准备
@@ -233,7 +234,7 @@
 							</v-list>
 						</v-sheet>
 					</v-bottom-sheet>
-					<v-text-field label="testewstewgioadejfiodajfoif" v-model="test"></v-text-field>
+					<!-- <v-text-field label="testewstewgioadejfiodajfoif" v-model="test"></v-text-field> -->
 					
 					<!-- <v-btn class="myselfChat" large color="primary" width=120>
 						聊天
@@ -251,56 +252,8 @@
 			return {
 				user : JSON.parse(window.sessionStorage.getItem("user")),//当前用户
 				isInit:true,
-				// mySelfPlayer:{
-				// 	isMaster:true,//房主
-				// 	username:'dddddddd',//用户名
-				// 	uname:'张三',//昵称
-				// 	uface:'img/waitplay.5e1581e1.png',//头像
-				// 	friends:[
-				// 		{
-				// 			isConnect:'no',//在线状态  no不在线 yes在线 not勿扰
-				// 			username:'li',//用户名
-				// 			uname:'李四',//
-				// 		}
-				// 	],//好友
-				// 	status:2,//准备状态 0 未准备 1 已准备 2开始游戏 3等待房主开始游戏
-				// },
-				// oppositePlayer:{
-				// 	isMaster:false,//房主
-				// 	username:'dfsf',//用户名
-				// 	uname:'张三对面',//昵称
-				// 	uface:'img/waitplay.5e1581e1.png',//头像
-				// 	status:0,//准备状态 0 未准备 1 已准备 2开始游戏 3等待房主开始游戏
-				// },
-				// leftPlayer:{
-				// 	isMaster:false,//房主
-				// 	username:'dsfdsf',//用户名
-				// 	uname:'飘飘左',//昵称
-				// 	uface:'img/waitplay.5e1581e1.png',//头像
-				// 	status:0,//准备状态 0 未准备 1 已准备 2开始游戏 3等待房主开始游戏
-				// },
-				// rightPlayer:{
-				// 	isMaster:false,//房主
-				// 	username:'dsfdfsfsddsf',//用户名
-				// 	uname:'揉揉右',//昵称
-				// 	uface:'img/waitplay.5e1581e1.png',//头像
-				// 	status:0,//准备状态 0 未准备 1 已准备 2开始游戏 3等待房主开始游戏
-				// },
 				inviteFriends: false,
 				chatFriends:false,
-				// friends: [{
-				// 		name: '张三'
-				// 	},
-				// 	{
-				// 		name: '李四'
-				// 	},
-				// 	{
-				// 		name: '王五'
-				// 	},
-				// 	{
-				// 		name: '赵六'
-				// 	},
-				// ],
 			}
 		},
         computed: mapState([

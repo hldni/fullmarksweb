@@ -55,7 +55,7 @@
 					count : 'img' + ++this.count,//
 					top : 'top:' + y + 'px;',
 					left : 'left:' + x + 'px;',
-					opacity : 'opacity:' + 0.5 + ';',
+					// opacityx : 'opacity:' + 0.5 + ';',
 					childBgc : color,
 					textIndex : index,
 					scale : 'transform: scale(' + 1 + ');', 
@@ -66,8 +66,8 @@
 				this.updateBubble();
 			},
 			removeSmallHert(){		
-				this.loves[this.count-1].opacity = 'opacity:' + 0 + ';',
-				this.loves[this.count-1].scale = 'transform:translateY(' + -80 + 'px) scale(' + 0.5 + ');'
+				// this.loves[this.count-1].opacityx = 'opacity:' + 0 + ';',
+				// this.loves[this.count-1].scale = 'transform:translateY(' + -80 + 'px) scale(' + 0.5 + ');'
 			},
 			createBubble(){
 				let left = [10, 20, 35, 50, 55, 65, 75, 80, 70, 85,77];

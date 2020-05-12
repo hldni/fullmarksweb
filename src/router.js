@@ -15,6 +15,7 @@ import UpdateData from './pages/user/updata.vue'
 Vue.use(Router)
 
 export default new Router({
+	base: '/fullMarks/',
 	 routes: [
 		{
 			path: '/',

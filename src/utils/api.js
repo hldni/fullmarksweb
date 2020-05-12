@@ -46,6 +46,7 @@ axios.interceptors.response.use(success => {
     return;
 })
 
+// let base = 'fullmarks';
 let base = '';
 
 export const postKeyValueRequest = (url, params) => {
@@ -62,7 +63,11 @@ export const postKeyValueRequest = (url, params) => {
         }],
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+		// crossDomain:true, //设置跨域为true
+		// xhrFields: {
+		// 	withCredentials: true //默认情况下，标准的跨域请求是不会发送cookie的
+		// },
     });
 }
 export const postRequest = (url, params) => {
