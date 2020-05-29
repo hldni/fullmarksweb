@@ -11,26 +11,25 @@
 							<!-- </div> -->
 						</v-col>
 						<v-col cols="8">
+							<div>&nbsp;</div>
 							<div >
 								{{user.username}}
 							</div>
-							<div @click="test">
+			<!-- 				<div @click="test">
 								等级
 							</div>
 							<div @click="updataFace">
 								修改头像
-							</div>
+							</div> -->
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col cols="1"  offset="6">
-					<div style="background-color: #8A2BE2;">钻石</div>
-				</v-col>
+			<v-col  cols="8">
+				<Money></Money>
+			</v-col>
 				<v-col cols="1">
-					<div style="background-color: #FFF1EB;">钻石</div>
+					<v-btn @click="quit" color="rgb(50,183,213)">退出</v-btn>
 				</v-col>
-				<v-col cols="1">
-					<v-btn @click="quit">退出</v-btn>
 				</v-col>
 				<!-- </v-container> -->
 			</v-row>
@@ -68,18 +67,24 @@
 				<historicalRecord ref="historicalRecord" @updateBottomNav="updateBottomNav"></historicalRecord>
 				
 			</v-bottom-navigation>
-			<div cols="12" class="black"><span class="foot">版权所有</span></div>
+			<div cols="12" class="black"><span class="foot">@hgf 备案号:<a style="color: white; text-decoration:none;" href="http://www.beian.miit.gov.cn/">陇ICP备19004163号</a></span></div>
 		</div>
 	</div>
 </template>
 
 <script>
+	// 签到
 	import singin from '../../components/games/SingIn.vue';
 	import friend from '../../components/games/Friend.vue';
+	// 设置
 	import setting from '../../components/hurdle/Setting.vue';
+	// 背包
 	import backpacker from '../../components/hurdle/Backpacker.vue';
+	// 历史战绩
 	import historicalRecord from '../../components/hurdle/HistoricalRecord.vue';
 	import shop from '../../components/hurdle/Shop.vue';
+	// 金币钻石
+	import Money from '../../components/head/money.vue'
 	export default {
 		components: {
 			singin,
@@ -87,7 +92,8 @@
 			setting,
 			backpacker,
 			historicalRecord,
-			shop, 
+			shop, 	
+			Money, 
 		},
 		data() {
 			return {
@@ -138,6 +144,12 @@
 			updataFace(){
 				this.$router.push("/updateData");
 			}
+		},
+		created() {
+			/**
+			 * 更新玩家金币
+			 */
+			this.$store.commit("UPDATE_GOLD",this.user.ugold);
 		},
 		computed: {
 			color() {

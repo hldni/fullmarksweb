@@ -2,10 +2,10 @@
 	<div class="game">
 		<div id="head">
 			<v-row>
-				<v-col cols="2">
+				<v-col cols="2" offset=1>
 					<v-row no-gutters>
-						<v-col cols="3" offset=3>
-							<v-btn @click="back">
+						<v-col cols="3">
+							<v-btn @click="back"  color="rgb(50,183,213)">
 								退出
 							</v-btn>
 						</v-col>
@@ -16,13 +16,10 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col cols="1" offset="6">
-					<div style="background-color: #8A2BE2;">钻石</div>
+				
+				<v-col  cols="8">
+					<Money></Money>
 				</v-col>
-				<v-col cols="1">
-					<div style="background-color: #FFF1EB;">钻石</div>
-				</v-col>
-				<v-col cols="1"></v-col>
 			</v-row>
 		</div>
 		<div id="body">
@@ -72,7 +69,7 @@
 					&nbsp;{{leftPlayer.uname}}
 				</div>
 				
-				<v-card class="leftPlayerState" v-if="leftPlayer.status == 0" color="#CC0033" width="100" height="100" outlined>
+				<v-card class="leftPlayerState" v-if="leftPlayer.status == 0"C color="#CC0033" width="100" height="100" outlined>
 					<v-card-text>
 						<span style="font-size: 18px;color: white;">
 							<br/>
@@ -149,7 +146,7 @@
 					<v-bottom-sheet v-model="inviteFriends" inset><!-- 此处留有问题，由于上边使用了v-for,应该解决  已解决-->
 						<template v-slot:activator="{ on }">
 							<v-btn class="myselfInvite" large color="primary" width=120 v-on="on">
-								邀请好友aa
+								邀请好友
 							</v-btn>
 						</template>
 						<v-sheet style="overflow-y:auto;" class="text-center" height="300px" width="300px">
@@ -247,7 +244,12 @@
 
 <script>
 	import {mapState} from 'vuex'
-	export default {
+	// 金币钻石
+	import Money from '../../components/head/money.vue'
+	export default {		
+		components:{
+			Money,
+		},
 		data() {
 			return {
 				user : JSON.parse(window.sessionStorage.getItem("user")),//当前用户

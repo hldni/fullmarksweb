@@ -15,8 +15,10 @@ const store = new Vuex.Store({
     state: {
         currentUser: JSON.parse(window.sessionStorage.getItem("user")),
         sessions: {},//存放本地缓存
+		sessionsUser : 0,
         stomp: null,//全局通信
         stomp_room: null,//房间通信
+        gold: 0,//玩家金币
 		roomId:'',//房间号
 		players:[],//房间中的玩家
 		mySelfPlayer: {},//存放自己的信息 包括昵称、头像、剩余牌数等
@@ -24,7 +26,7 @@ const store = new Vuex.Store({
 		leftPlayer: {},//存放左边玩家的信息
 		rightPlayer: {},//存放右边玩家的信息
 		downBorders:[],//底牌
-        friends: [],//好友信息
+        friends: [{username:'niodsf',uname:'ldfj',uface:'ldskjf'}],//好友信息
 		index:0,//当前玩家所在players下标
         currentSession: null,
 		papers:["big.jpg","small.jpg",
@@ -44,10 +46,13 @@ const store = new Vuex.Store({
 		boards: [],//玩家的牌
 		count:1,//第几个操作的玩家
 		maxGrade:80,//当前叫的最大的分数，默认80
-		
 		num:0,//副家获得的分数
 		isMasterPlayer:false,//是否为主家
 		masterBoard:-1,//主牌
+		win:false,
+		defeated:false,
+		countDown:25,
+		hint:'',
     },
 	//这里是set方法
     mutations: {
@@ -104,11 +109,34 @@ const store = new Vuex.Store({
 			// console.info("现在叫分的玩家:"+ msg.index);
 			// console.info("上个叫分玩家:"+gradeObj.index+"fenshu:"+gradeObj.grade);
 			store.commit('UPDATE_PLAYER_GRADE',msg);
-			
-			
-			
-			
-			
+		},
+		/**
+		 * 更新和玩家对话的user
+		 */
+		UPDATE_SESSIONSUSER(state,sessionsUser){
+			state.sessionsUser = sessionsUser;
+		},
+		
+		/**
+		 * 更新好友信息
+		*/
+	   UPDATE_FRIENDS(state,friends){
+		   state.friends = friends;
+	   },
+		
+		/**
+		 * 添加聊天消息
+		 */
+		ADD_CHAT_MESSAGE(state,msg){
+			let mss = state.sessions[state.currentUser.username + '#' + msg.to];
+			if (!mss) {
+			    Vue.set(state.sessions, state.currentUser.username + '#' + msg.to, []);
+			}
+			state.sessions[state.currentUser.username + '#' + msg.to].push({
+			    content: msg.content,
+			    date: new Date().toLocaleTimeString(),
+			    self: !msg.notSelf
+			})
 		},
 		
 		/**
@@ -127,8 +155,6 @@ const store = new Vuex.Store({
 			state.oppositePlayer.borders = msg.boards[((state.index)+1)%4];
 			state.leftPlayer.borders = msg.boards[((state.index)+1)%4];
 			state.downBorders = msg.boards[4];
-			// alert(index);
-			//省略更新玩家所叫的分数，由于是首个叫分，初始化叫分已完成
 			//更新叫分玩家
 			store.commit('UPDATE_GRADE_STATUS',index);
 
@@ -142,7 +168,36 @@ const store = new Vuex.Store({
 			state.oppositePlayer.isOutBoards = false;
 			state.leftPlayer.isOutBoards = false;
 		},
-		
+		/**
+		 * 更新玩家金币
+		 * @param {Object} state
+		 * @param {Object} gold
+		 */
+		UPDATE_GOLD(state,gold){
+			state.gold = gold;
+		},
+		/**
+		 * 更新玩家胜利状态
+		 * @param {Object} state
+		 */
+		UPDATE_WIN_STATUS(state){
+			state.win = !state.win;
+		},
+		/**
+		 * 更新玩家失败状态
+		 * @param {Object} state
+		 */
+		UPDATE_DEFEATED_STATUS(state){
+			state.defeated = !state.defeated;
+		},
+		/**
+		 * 倒计时
+		 * @param {Object} state
+		 * @param {Object} countDown
+		 */
+		UPDATE_COUNTDOWN(state,countDown){
+			state.countDown = countDown;
+		},
 		/**
 		 * 更新玩家叫的分数
 		 * @param {Object} state
@@ -418,14 +473,19 @@ const store = new Vuex.Store({
 		SHOW_HINT(state,textObj){
 			switch(textObj.index){
 				case state.index : Message.success("请您" + textObj.text);
+					state.hint = "请您" + textObj.text;
 					break;
-				case (state.index + 3) % 4 :Message.success("请等待玩家:"+state.leftPlayer.uname + textObj.text);
+				case (state.index + 3) % 4 :
+					Message.success("请等待玩家:"+state.leftPlayer.uname + textObj.text);
+					state.hint = "请等待玩家:"+state.leftPlayer.uname + textObj.text;
 					break;
 				case (state.index + 2) % 4 :
 						Message.success("请等待玩家:"+state.oppositePlayer.uname + textObj.text);
+						state.hint = "请等待玩家:"+state.oppositePlayer.uname + textObj.text;
 					break;
 				case (state.index + 1) % 4 :
 						Message.success("请等待玩家:"+state.rightPlayer.uname + textObj.text);
+						state.hint = "请等待玩家:"+state.rightPlayer.uname + textObj.text;
 					break;
 			}
 		}
@@ -435,23 +495,30 @@ const store = new Vuex.Store({
 	   * 本来不应该支持浏览器多开窗口访问得！！！哎，我这该死得温柔
 	   */
 		connect(context){
-			// context.state.stomp = Stomp.over(new SockJS("http://47.93.26.159:8079/ws/ep"));
+			// context.state.stomp = Stomp.over(new SockJS("http://hlsxn.cn:8079/ws/ep"));
 			context.state.stomp = Stomp.over(new SockJS("/ws/ep"));
 			window.sessionStorage.setItem("globalConnect", context.state.stomp);//此通信只需要建立一次
 			context.state.stomp.connect({}, frame=> {
 			Message.success("成功进入connect");
 			context.state.stomp.subscribe("/user/queue/chat", message=> {
+				// var msg = JSON.parse(message.body);
+				// Message.success("接收成功");
+				// alert("发送人："+msg.from);
+				// alert("内容："+ msg.content);
 				var msg = JSON.parse(message.body);
-				Message.success("接收成功");
-				alert("发送人："+msg.from);
-				alert("内容："+ msg.content);
+				if(msg.type == 1){
+					// 添加聊天记录
+					context.commit('ADD_CHAT_MESSAGE',msg.msg);
+				}
+				
+				
 			});
 			}, failedMsg=> {
 		 
 			});
 		},
 		connect_room(context,roomId){
-			// context.state.stomp_room = Stomp.over(new SockJS("http://47.93.26.159:8079/ws/ep"));
+			// context.state.stomp_room = Stomp.over(new SockJS("http://hlsxn.cn:8079/ws/ep"));
 			context.state.stomp_room = Stomp.over(new SockJS("/ws/ep"));
 			context.state.stomp_room.connect({}, frame=> {
 			context.state.roomId = roomId;//设置房间号为当前房间号
@@ -539,6 +606,7 @@ const store = new Vuex.Store({
 				 * 叫分
 				 */
 				if(msg.type == 12){
+					context.state.countDown = 25;
 					context.commit('CALL_GRADE',msg);
 					context.state.count++;
 					
@@ -554,6 +622,7 @@ const store = new Vuex.Store({
 				 * 叫分完毕
 				 */
 				if(msg.type == 13){
+					context.state.countDown = 25;
 					context.state.isScore = false;
 					context.state.isRepair = true;
 					context.state.maxGrade = msg.maxGrade;
@@ -588,6 +657,7 @@ const store = new Vuex.Store({
 				 * 补牌玩家准备
 				 */
 				if(msg.type == 14){
+					context.state.countDown = 25;
 					context.state.isRepair = false;
 					// alert("fanhuichenggon");
 					if(msg.index == context.state.index){
@@ -608,6 +678,7 @@ const store = new Vuex.Store({
 				}
 				//出牌 设置下一个出牌玩家
 				if(msg.type == 15){
+					context.state.countDown = 25;
 					//更新主牌
 					if(context.state.masterBoard == -1){
 						let masterBoard = msg.masterBoard;
@@ -637,6 +708,7 @@ const store = new Vuex.Store({
 				 * 一轮结束，准备下一轮
 				 */
 				if(msg.type == 16){
+					context.state.countDown = 25;
 					//更新出牌信息
 					context.state.boards = msg.boards;
 					//更新上一个出牌玩家手中剩余牌数
@@ -651,7 +723,7 @@ const store = new Vuex.Store({
 						//显示提示信息
 						let textObj = new Object();
 						textObj.index = msg.index;
-						textObj.text = "大了";
+						textObj.text = "出牌1";
 						context.commit('SHOW_HINT',textObj);
 						context.state.boards = [];
 						//更新第几个出牌信息
@@ -663,8 +735,41 @@ const store = new Vuex.Store({
 							context.state.mySelfPlayer.on = true;
 						}
 					},3000)
+				}
+				/**
+				 * 结算
+				 */
+				if(msg.type == 17){
+					context.state.countDown = 25;
+					//更新出牌信息
+					context.state.boards = msg.boards;
+					//更新上一个出牌玩家手中剩余牌数
+					if(context.state.index == msg.boards[7][1]){
+						context.state.mySelfPlayer.borders = msg.boards[6];
+						context.state.mySelfPlayer.on = false;
+					}
+					context.state.num = context.state.num + msg.num; 
+					context.commit('UPDATE_LASTPLAYER_BOARD',msg);
 					
-
+					setTimeout(function(){
+						//显示提示信息
+						// let textObj = new Object();
+						// textObj.index = msg.index;
+						// textObj.text = "大了";
+						// context.commit('SHOW_HINT',textObj);
+						context.state.boards = [];
+						//更新第几个出牌信息
+						context.state.count = 1;
+						//初始化玩家已经出了的牌
+						context.commit('INIT_PLAYER_OUTBORDSTATUS');
+						//更新下一个出牌玩家
+						if(context.state.index % 2 == msg.index % 2){
+							
+							context.state.win = true;
+						}else{
+							context.state.defeated = true;
+						}
+					},3000)
 				}
 				
 			});

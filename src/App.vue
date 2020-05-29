@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-content>
+
 		<message></message>
 		<router-view/>
     </v-content>
@@ -8,7 +9,7 @@
 </template>
 
 <script>
-import message from '@/components/Message/Message'
+	import message from '@/components/Message/Message'
 export default {
  
 	name: 'App',
@@ -16,7 +17,7 @@ export default {
 		message,
 	},
 	data: () => ({
-	//
+	
 	}),
 	methods:{
 		listenerHandle(e){
@@ -31,15 +32,6 @@ export default {
 				}
 			}
 		},
-		//检测浏览器刷新行为失败
-		// beforeunloadHandler(e) {
-			
-		// 	e = e || window.event
-		// 	if(e){
-		// 		e.returnValue="关闭提示"
-		// 	}
-		// 	return '关闭提醒'
-		// }
 	},
 	mounted() {
 		window.onpopstate = () => {
@@ -59,6 +51,7 @@ export default {
 			event.returnValue = false;
 		};
 		
-	}
+	},	
 };
 </script>
+</style>

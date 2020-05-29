@@ -4,7 +4,6 @@
 		<v-col cols="12" md="10">
 			<v-form ref="form" v-model="valid" lazy-validation>
 				<v-text-field v-model="user.username" :counter="11" :rules="nameRules" label="用户名" required></v-text-field>
-
 				<v-text-field v-model="user.upassword" :rules="upasswordRules" label="密码" required></v-text-field>
 				<v-row justify="space-between">
 					<v-col cols="12" md="4">
@@ -15,20 +14,13 @@
 					</v-col>
 				</v-row>
 				<a href="../test1">百分纸牌协议</a>			
-
 				<v-checkbox v-model="checkbox" :rules="[v => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
-
 				<v-btn :disabled="!valid" color="success" class="mr-4" @click="validate">
 					登录
 				</v-btn>
-
 				<v-btn color="warning" @click="resetValidation">
 					去注册
 				</v-btn>
-				
-		<!-- 		<v-btn color="warning" @click="resetValidation">
-					不是我本人，注销此账号
-				</v-btn> -->
 			</v-form>
 		</v-col>
 		<v-col cols="12" md="1"></v-col>
@@ -42,8 +34,11 @@
 				valid: false,
 				user: {
 					username: 'dddddddd',
+					// username:'',
 					upassword: 'ssdsddss',
+					// upassword:'',
 					code: 'dddd',
+					// code:'',
 				},
 				message: '',
 				nameRules: [
@@ -68,8 +63,8 @@
 					'Item 3',
 					'Item 4',
 				],
-				checkbox: false,
-				src: 'http://localhost:8079/kaptcha?' + new Date()
+				checkbox: true,
+				src: 'http://hlsxn.cn:8079/kaptcha?' + new Date()
 			}
 		},
 		methods: {
@@ -94,7 +89,7 @@
 				})
 			},
 			changeImg() {
-				this.src = 'http://localhost:8079/kaptcha?' + new Date()
+				this.src = 'http://hlsxn.cn:8079/kaptcha?' + new Date()
 			},
 			remvoeAlert(){
 				this.$parent.alert = false;
